@@ -19,7 +19,7 @@ CREATE TABLE matches
 DROP TABLE IF EXISTS players;
 CREATE TABLE players
 (
-	player_id		integer PRIMARY KEY,
+	player_id		SERIAL PRIMARY KEY,
 	name			varchar(45) NOT NULL,
 	wins			integer,
 	opponent_match_wins	integer

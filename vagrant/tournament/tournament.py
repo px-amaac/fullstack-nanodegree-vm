@@ -13,19 +13,32 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    conn = connect()
+    c = conn.cursor()
+    c.execute("DELETE FROM matches;")
+    conn.commit()
+    conn.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-
+    conn = connect()
+    c = conn.cursor()
+    c.execute("DELETE FROM players;")
+    conn.commit()
+    conn.close()
 
 def countPlayers():
     """Returns the number of players currently registered."""
-
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM players;")
+    count = c.fetchone()
+    conn.close()
+    return count[0]
 
 def registerPlayer(name):
-    """Adds a player to the tournament database.
-  
+    """Adds a player to the tournament database.  
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
   
