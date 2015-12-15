@@ -11,6 +11,7 @@ CREATE database tournament;
 DROP TABLE IF EXISTS matches;
 CREATE TABLE matches
 (
+	id			SERIAL PRIMARY KEY,
 	round			integer NOT NULL,
 	player_1_id		integer NOT NULL,
 	player_2_id		integer NOT NULL,
@@ -19,7 +20,7 @@ CREATE TABLE matches
 DROP TABLE IF EXISTS players;
 CREATE TABLE players
 (
-	player_id		SERIAL PRIMARY KEY,
+	id			SERIAL PRIMARY KEY,
 	name			varchar(45) NOT NULL,
 	wins			integer,
 	opponent_match_wins	integer
