@@ -23,7 +23,8 @@ CREATE TABLE players
 	id			SERIAL PRIMARY KEY,
 	name			varchar(45) NOT NULL,
 	wins			integer,
-	opponent_match_wins	integer
+	opponent_match_wins	integer,
+	matches			integer
 );
 DROP TABLE IF EXISTS tournament;
 CREATE TABLE tournament
