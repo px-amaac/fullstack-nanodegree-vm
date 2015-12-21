@@ -47,7 +47,7 @@ def registerPlayer(name):
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO players (name,wins,matches,opponent_match_wins) VALUES ('{0}',0,0,0);".format(name))
+    c.execute("INSERT INTO players (name,wins,matches) VALUES ('{0}',0,0);".format(name))
     conn.commit()
     conn.close()
 
@@ -67,7 +67,7 @@ def playerStandings():
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("SELECT id, name, wins, matches, opponent_match_wins FROM players ORDER BY wins DESC, opponent_match_wins DESC;")
+    c.execute("SELECT id, name, wins, matches FROM players ORDER BY wins DESC;")
     players = c.fetchall()
     conn.close()
     return players
@@ -79,7 +79,9 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
- 
+    increaseWinCount(winner)
+    increaseMatchCount(winner, loser)
+    createMatch(0,winner,loser,winner)
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -97,4 +99,40 @@ def swissPairings():
         name2: the second player's name
     """
 
+def increaseWinCount(winnerId):
+    """Increase the win count on the for the winner with given winnerId
+    """
+    conn = connect()
+    c = conn.cursor()
+    c.execute("UPDATE players SET wins = wins+1 WHERE id = '{0}';".format(winnerId))
+    conn.commit()
+    conn.close()
 
+def increaseMatchCount(player1, player2):
+    """Increase the match count of both players
+    """
+    conn = connect()
+    c = conn.cursor()
+    query = "UPDATE players SET matches = matches+1"
+    c.execute("UPDATE players SET matches = matches + 1 WHERE id = '{0}' OR id = '{1}';".format(player1, player2))
+    conn.commit()
+    conn.close()
+
+def createMatch(roundNumber, player1Id, player2Id, winnerId):
+    """Create a match and add it to the matches table
+    """
+    conn = connect()
+    c = conn.cursor()
+    c.execute("INSERT INTO matches (round, player_1_id, player_2_id, winner_id) VALUES ('{0}','{1}','{2}','{3}');".format(roundNumber, player1Id, player2Id, winnerId))
+    conn.commit()
+    conn.close()
+
+def listMatches():
+    """List all the matches in table ordered by round number.
+    """
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT * FROM matches ORDER BY round DESC;")
+    matches = c.fetchall()
+    conn.close()
+    return matches
